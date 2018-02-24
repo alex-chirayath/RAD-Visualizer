@@ -20,6 +20,7 @@ dashboardPage(
           ".csv"
         )
       ),
+      menuItem("Summary", tabName = "summary"),
       menuItem("Scatter Plot", tabName = "scatterPlot"),
       menuItem("Bar Plot", tabName = "barPlot"),
       menuItem("Box Plot", tabName = "boxPlot"),
@@ -28,6 +29,17 @@ dashboardPage(
   ),
   dashboardBody(
     tabItems(
+      tabItem(tabName = "summary",
+              fluidRow(
+                box("First ten rows of input file",
+                    dataTableOutput("headData")),
+                box("Correlation Matrix",
+                    tableOutput("corrMatrixData")),
+                box("Mean",
+                    tableOutput("meanData"),
+                    "Median",
+                    tableOutput("medianData"))
+              )),
       tabItem(tabName = "scatterPlot",
               fluidRow(
                 box("Inputs for Scatter Plot",
@@ -41,7 +53,7 @@ dashboardPage(
                 box("Code", verbatimTextOutput("scatterPlotCode"))
               )
       ),
-
+      
       tabItem(tabName = "barPlot",
               fluidRow(
                 box("Inputs for Bar Plot",

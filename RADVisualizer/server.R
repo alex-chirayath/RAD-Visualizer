@@ -53,6 +53,31 @@ shinyServer(function(input, output) {
     categorical_vars
   })
   
+  output$headData <- renderDataTable({
+    head(GetDataFrame(), 10)
+  }, options = list(scrollX = TRUE))
+  
+  output$meanData <- renderTable({
+    data_frame <- GetDataFrame()
+    numeric_vars <- GetNumericVariables()
+    
+    sapply(numeric_vars, function(x) { mean(data_frame[, x], na.rm = TRUE)}, simplify = FALSE, USE.NAMES = TRUE)
+  })
+  
+  output$medianData <- renderTable({
+    data_frame <- GetDataFrame()
+    numeric_vars <- GetNumericVariables()
+    
+    sapply(numeric_vars, function(x) { median(data_frame[, x], na.rm = TRUE)}, simplify = FALSE, USE.NAMES = TRUE)
+  })
+  
+  output$corrMatrixData <- renderTable({
+    data_frame <- GetDataFrame()
+    numeric_vars <- GetNumericVariables()
+    
+    cor(data_frame[, numeric_vars])
+  }, rownames = TRUE)
+  
   output$scatterPlotVariableXInput <- renderUI({
     numeric_vars <- GetNumericVariables()
     
