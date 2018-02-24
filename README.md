@@ -1,1 +1,22 @@
-# DataScienceFlask
+# [Shiny_DataScience]
+
+[PROJECT DESCRIPTION]
+  * [PROJECT FEATURES] 
+
+## USAGE
+  * [USAGE EXAMPLE]
+  
+## BUILD/INSTALLATION INSTRUCTIONS
+  * [PLATFORM 1]
+    * [BUILD EXAMPLE]
+  * [PLATFORM 2]
+    * [BUILD EXAMPLE]
+
+## [INTERFACES] _(if applicable)_ 
+
+## OTHER SOURCES OF DOCUMENTATION
+
+## Contributor Guide
+[LINK TO CONTRIBUTING.md]
+
+## License 
