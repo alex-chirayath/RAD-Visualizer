@@ -1,5 +1,6 @@
 library(shiny)
 library(shinydashboard)
+library(colourpicker)
 
 dashboardPage(
   dashboardHeader(),
@@ -32,6 +33,7 @@ dashboardPage(
                 box("Inputs for Scatter Plot",
                     uiOutput("scatterPlotVariableXInput"),
                     uiOutput("scatterPlotVariableYInput"),
+                    colourInput("scatterPlotColor", "Select color ", "black"),
                     actionButton("plotScatter", "Plot")),
                 
                 box(plotOutput("scatterPlotOutput")),
