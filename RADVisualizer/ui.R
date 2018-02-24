@@ -26,5 +26,19 @@ dashboardPage(
     )
   ),
   dashboardBody(
+    tabItems(
+      tabItem(tabName = "scatterPlot",
+              fluidRow(
+                box("Inputs for Scatter Plot",
+                    uiOutput("scatterPlotVariableXInput"),
+                    uiOutput("scatterPlotVariableYInput"),
+                    actionButton("plotScatter", "Plot")),
+                
+                box(plotOutput("scatterPlotOutput")),
+                
+                box("Code", verbatimTextOutput("scatterPlotCode"))
+              )
+      )
+    )
   )
 )
