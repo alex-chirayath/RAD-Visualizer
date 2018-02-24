@@ -47,6 +47,7 @@ dashboardPage(
                 box("Inputs for Bar Plot",
                     uiOutput("barPlotVariableXInput"),
                     uiOutput("barPlotVariableColorInput"),
+                    checkboxInput("barstacked", "Stacked?", value = FALSE),
                     actionButton("plotBar", "Plot")),
                 
                 box(plotOutput("barPlotOutput")),

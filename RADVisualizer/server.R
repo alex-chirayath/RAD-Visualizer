@@ -132,13 +132,24 @@ shinyServer(function(input, output) {
     isolate({
       data_frame <- GetDataFrame()
       
-      ggplot(data = data_frame, mapping = aes(x = data_frame[, input$barPlotVariableX],
-                                              fill = data_frame[, input$barPlotVariableColor])) + 
-      geom_bar(position = "dodge") +
-      labs(title = paste0("Bar plot of ", input$barPlotVariableX, " with ", input$barPlotVariableColor),
-            x = input$barPlotVariableX,
-            y = "Count",
-            fill = input$barPlotVariableColor)
+      if (input$barstacked == FALSE) {
+        ggplot(data = data_frame, mapping = aes(x = data_frame[, input$barPlotVariableX],
+                                                fill = data_frame[, input$barPlotVariableColor])) + 
+          geom_bar(position = "dodge") +
+          labs(title = paste0("Bar plot of ", input$barPlotVariableX, " with ", input$barPlotVariableColor),
+               x = input$barPlotVariableX,
+               y = "Count",
+               fill = input$barPlotVariableColor)
+      }
+      else {
+        ggplot(data = data_frame, mapping = aes(x = data_frame[, input$barPlotVariableX],
+                                                fill = data_frame[, input$barPlotVariableColor])) + 
+          geom_bar() +
+          labs(title = paste0("Bar plot of ", input$barPlotVariableX, " with ", input$barPlotVariableColor),
+               x = input$barPlotVariableX,
+               y = "Count",
+               fill = input$barPlotVariableColor)
+      }
     })
   })
   
@@ -148,6 +159,7 @@ shinyServer(function(input, output) {
       return()
     
     isolate({
+      if (input$barstacked == FALSE) {
         text <- paste0('ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$barPlotVariableX, '],
                        fill = data_frame[,', input$barPlotVariableColor,'])) + \n
                        geom_bar(position = "dodge") + \n
@@ -155,6 +167,16 @@ shinyServer(function(input, output) {
                        x = ', input$barPlotVariableX, '
                        y = "Count",
                        fill = ', input$barPlotVariableColor, ')')
+      }
+      else {
+        text <- paste0('ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$barPlotVariableX, '],
+                       fill = data_frame[,', input$barPlotVariableColor,'])) + \n
+                       geom_bar() + \n
+                       labs(title = "Bar plot of ', input$barPlotVariableX, ' with ', input$barPlotVariableColor, '"
+                       x = ', input$barPlotVariableX, '
+                       y = "Count",
+                       fill = ', input$barPlotVariableColor, ')')
+      }
     })
     
   })
