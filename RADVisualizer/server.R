@@ -108,4 +108,55 @@ shinyServer(function(input, output) {
     })
   })
   
+  output$barPlotVariableXInput <- renderUI({
+    categorical_vars <- GetCategoricalVariables()
+    selectInput('barPlotVariableX',
+                'Variable on X-axis',
+                categorical_vars,
+                multiple = FALSE)
+  })
+  
+  output$barPlotVariableColorInput <- renderUI({
+    categorical_vars <- GetCategoricalVariables()
+    selectInput('barPlotVariableColor',
+                'Variable for color',
+                categorical_vars,
+                multiple = FALSE)
+  })
+  
+  output$barPlotOutput <- renderPlot({
+    
+    if(input$plotBar == 0)
+      return()
+    
+    isolate({
+      data_frame <- GetDataFrame()
+      
+      ggplot(data = data_frame, mapping = aes(x = data_frame[, input$barPlotVariableX],
+                                              fill = data_frame[, input$barPlotVariableColor])) + 
+      geom_bar(position = "dodge") +
+      labs(title = paste0("Bar plot of ", input$barPlotVariableX, " with ", input$barPlotVariableColor),
+            x = input$barPlotVariableX,
+            y = "Count",
+            fill = input$barPlotVariableColor)
+    })
+  })
+  
+  output$barPlotCode <- renderText({
+    
+    if(input$plotBar == 0) 
+      return()
+    
+    isolate({
+        text <- paste0('ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$barPlotVariableX, '],
+                       fill = data_frame[,', input$barPlotVariableColor,'])) + \n
+                       geom_bar(position = "dodge") + \n
+                       labs(title = "Bar plot of ', input$barPlotVariableX, ' with ', input$barPlotVariableColor, '"
+                       x = ', input$barPlotVariableX, '
+                       y = "Count",
+                       fill = ', input$barPlotVariableColor, ')')
+    })
+    
+  })
+  
 })

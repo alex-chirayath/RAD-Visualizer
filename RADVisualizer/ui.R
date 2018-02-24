@@ -40,6 +40,19 @@ dashboardPage(
                 
                 box("Code", verbatimTextOutput("scatterPlotCode"))
               )
+      ),
+
+      tabItem(tabName = "barPlot",
+              fluidRow(
+                box("Inputs for Bar Plot",
+                    uiOutput("barPlotVariableXInput"),
+                    uiOutput("barPlotVariableColorInput"),
+                    actionButton("plotBar", "Plot")),
+                
+                box(plotOutput("barPlotOutput")),
+                
+                box("Code", verbatimTextOutput("barPlotCode"))
+              )
       )
     )
   )
