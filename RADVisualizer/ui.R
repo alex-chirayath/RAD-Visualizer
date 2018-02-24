@@ -54,6 +54,31 @@ dashboardPage(
                 
                 box("Code", verbatimTextOutput("barPlotCode"))
               )
+      ),
+      
+      tabItem(tabName = "boxPlot",
+              fluidRow(
+                box("Inputs for Box Plot",
+                    uiOutput("boxPlotVariableXInput"),
+                    uiOutput("boxPlotVariableYInput"),
+                    actionButton("plotBox", "Plot")),
+                
+                box(plotOutput("boxPlotOutput")),
+                
+                box("Code", verbatimTextOutput("boxPlotCode"))
+              )
+      ),
+      
+      tabItem(tabName = "histograms",
+              fluidRow(
+                box("Inputs for Histograms",
+                    uiOutput("histVariableXInput"),
+                    actionButton("plotHist", "Plot")),
+                
+                box(plotOutput("histPlotOutput")),
+                
+                box("Code", verbatimTextOutput("histPlotCode"))
+              )
       )
     )
   )

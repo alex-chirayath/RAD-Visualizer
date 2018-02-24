@@ -181,4 +181,92 @@ shinyServer(function(input, output) {
     
   })
   
+  output$boxPlotVariableXInput <- renderUI({
+    categorical_vars <- GetCategoricalVariables()
+    selectInput('boxPlotVariableX',
+                'Variable on X-axis',
+                categorical_vars,
+                multiple = FALSE)
+  })
+  
+  output$boxPlotVariableYInput <- renderUI({
+    numeric_vars <- GetNumericVariables()
+    selectInput('boxPlotVariableY',
+                'Variable on Y-axis',
+                numeric_vars,
+                multiple = FALSE)
+  })
+  
+  output$boxPlotOutput <- renderPlot({
+    if (input$plotBox == 0)
+      return()
+    
+    isolate({
+      data_frame <- GetDataFrame()
+      
+      ggplot(data = data_frame, mapping = aes(x = data_frame[, input$boxPlotVariableX], 
+                                              y = data_frame[, input$boxPlotVariableY],
+                                              fill = data_frame[, input$boxPlotVariableX])) + 
+        geom_boxplot() +
+        labs(title = paste0("Bar plot of ", input$boxPlotVariableX, " with ", input$boxPlotVariableY),
+             x = input$boxPlotVariableX,
+             y = input$boxPlotVariableY,
+             fill = input$boxPlotVariableX)
+    })
+  })
+  
+  output$boxPlotCode <- renderText({
+    if (input$plotBox == 0)
+      return()
+    
+    isolate({
+      paste0(
+        'ggplot(data = data_frame, mapping = aes(x = data_frame[, ' ,input$boxPlotVariableX,'], 
+                                                y = data_frame[, ',input$boxPlotVariableY, '],
+                                                fill = data_frame[, ', input$boxPlotVariableX, '])) + 
+          geom_boxplot() +
+          labs(title = "Bar plot of ', input$boxPlotVariableX, ' with ', input$boxPlotVariableY, '",
+               x = ', input$boxPlotVariableX, ',
+               y = ', input$boxPlotVariableY, ',
+               fill = ', input$boxPlotVariableX, ')'
+      )
+    })
+  })
+  
+  output$histVariableXInput <- renderUI({
+    numeric_vars <- GetNumericVariables()
+    selectInput('histPlotVariableX',
+                'Variable on X-axis',
+                numeric_vars,
+                multiple = FALSE)
+  })
+  
+  output$histPlotOutput <- renderPlot({
+    if(input$plotHist == 0)
+      return()
+    
+    isolate({
+      data_frame <- GetDataFrame()
+      
+      ggplot(data = data_frame, mapping = aes(x = data_frame[, input$histPlotVariableX])) +
+        geom_histogram()
+    })
+  })
+  
+  output$histPlotCode <- renderText({
+    if(input$plotHist == 0)
+      return()
+    
+    isolate({
+      data_frame <- GetDataFrame()
+      
+      paste0(
+        'ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$histPlotVariableX, '])) +\n
+        geom_histogram() +\n
+        labs(title = "Histogram of ', input$histPlotVariableX, '", 
+             x = ', input$histPlotVariableX, '
+             y = "Count")')
+    })
+  })
+  
 })
