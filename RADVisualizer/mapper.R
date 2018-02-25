@@ -1,0 +1,12 @@
+library(leaflet)
+library(dplyr)
+library(gdata)
+dataF=read.csv("C:/Dakshil/R_hackillinois/california_cities.csv")
+n=nrow(dataF)
+print(n)
+m <- leaflet()
+m<-addTiles(m)
+m<-setView(-99.88, 37.75, zoom = 4)
+  for(i in 1:n)
+    m<-addMarkers(m,lng=dataF$longd[i], lat=dataF$latd[i], popup="<b>Hello</b>" )
+m
