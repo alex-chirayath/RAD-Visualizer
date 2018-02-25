@@ -1,0 +1,4 @@
+speed,brand,dist
+5,hyundai,8
+7,maruti,14
+8,bajaj,16

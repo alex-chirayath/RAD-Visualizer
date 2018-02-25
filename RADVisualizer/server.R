@@ -1,5 +1,9 @@
 library(shiny)
 library(ggplot2)
+library(leaflet)
+library(caTools)
+library(rpart)
+library(rpart.plot)
 
 shinyServer(function(input, output) {
   
@@ -655,4 +659,205 @@ shinyServer(function(input, output) {
     })
     
   })
-        })
+  
+  output$lrVariables <- renderUI({
+    numeric_vars <- GetNumericVariables()
+    selectInput('lrx',
+                'Select Features',
+                numeric_vars,
+                multiple = TRUE)
+  })
+  
+  output$lrPredictor <- renderUI({
+    numeric_vars <- GetNumericVariables()
+    selected_lrx <- input$lrx
+    
+    vars <- numeric_vars[!numeric_vars %in% selected_lrx]
+    
+    selectInput('lrpr',
+                'Select Predictor Variable',
+                vars,
+                multiple = FALSE)
+  })
+  
+  GetTestFile <- reactive({
+    test.file <- input$testFile
+    
+    shiny::validate(need(!is.null(test.file), "Test file required"))
+    
+    test.file
+  })
+  
+  GetTestDataFrame <- reactive({
+    test.file <- GetTestFile()
+    
+    if (input$delimTestFile == "tsv") {
+      sep.choice <- '\t'
+    }
+    else if (input$delimTestFile == "csv") {
+      sep.choice <- ','
+    }
+    
+    read.csv(
+      test.file$datapath,
+      header = TRUE,
+      stringsAsFactors = FALSE,
+      sep = sep.choice
+    )
+  })
+  
+  GetSplits <- reactive({
+    set.seed(123)
+    train <- GetDataFrame()
+    
+    if (input$testFileOpt == 'Split') {
+      sample = sample.split(train, SplitRatio = input$trainRatio)
+      sample
+    }
+  })
+  
+  createLRModel <- reactive({
+    selected_lrx <- input$lrx
+    selected_pr <- input$lrpr
+    data_frame <- GetDataFrame()
+    
+    shiny::validate(need(length(selected_lrx)>= 1, "Variable selection required"))
+    formula <- as.formula(paste(selected_pr, "~", paste(selected_lrx, collapse = "+")))
+    if (input$testFileOpt == 'Upload') {
+      linear_mod <- lm(formula, data = data_frame)
+    }
+    else if (input$testFileOpt == 'Split') {
+      sample <- GetSplits()
+      train <- data_frame[sample == TRUE,]
+      linear_mod <- lm(formula, data = train)
+    }
+    
+    linear_mod
+  })
+  
+  GetLRPredictions <- reactive({
+    linear_mod <- createLRModel()
+    
+    if (input$testFileOpt == 'Upload') {
+      test <- GetTestDataFrame()
+    }
+    else if (input$testFileOpt == 'Split') {
+      sample <- GetSplits()
+      data_frame <- GetDataFrame()
+      test <- data_frame[sample == FALSE,]
+    }
+    
+    predictions <- predict(linear_mod, test)
+    
+    predictions
+  })
+  
+  GetActualOutcomesLR <- reactive({
+    if (input$testFileOpt == 'Upload') {
+      test <- GetTestDataFrame()
+    }
+    else if (input$testFileOpt == 'Split') {
+      sample <- GetSplits()
+      data_frame <- GetDataFrame()
+      test <- data_frame[sample == FALSE,]
+    }
+    
+    test[, input$lrpr]
+  })
+  
+  output$mseLR <- renderText({
+    actual <- GetActualOutcomesLR()
+    predictions <- GetLRPredictions()
+    
+    paste("Mean Squared Error: ", mean(abs((predictions - actual))/actual))
+  })
+  
+  output$predictionsLR <- renderTable({
+    actual <- GetActualOutcomesLR()
+    predictions <- GetLRPredictions()
+    
+    cbind(actual, predictions)
+  })
+  
+  output$dtVariables <- renderUI({
+    vars <- names(GetDataFrame())
+    selectInput('dtx',
+                'Select Features',
+                vars,
+                multiple = TRUE)
+  })
+  
+  output$dtPredictor <- renderUI({
+    vars <- GetCategoricalVariables()
+    selected_dtx <- input$dtx
+    
+    vars <- vars[!vars %in% selected_dtx]
+    
+    selectInput('dtpr',
+                'Select Predictor Variable',
+                vars,
+                multiple = FALSE)
+  })
+  
+  createDTModel <- reactive({
+    selected_dtx <- input$dtx
+    selected_pr <- input$dtpr
+    data_frame <- GetDataFrame()
+    
+    shiny::validate(need(length(selected_dtx) >= 1, "Variable selection required"))
+    formula <- as.formula(paste(selected_pr, "~", paste(selected_dtx, collapse = "+")))
+    if (input$testFileOpt == 'Upload') {
+      dt_mod <- rpart(formula, data = data_frame, method = "class")
+    }
+    else if (input$testFileOpt == 'Split') {
+      sample <- GetSplits()
+      train <- data_frame[sample == TRUE,]
+      dt_mod <- rpart(formula, data = train, method = "class")
+    }
+    
+    dt_mod
+  })
+  
+  GetDTPredictions <- reactive({
+    dt_mod <- createDTModel()
+    
+    if (input$testFileOpt == 'Upload') {
+      test <- GetTestDataFrame()
+    }
+    else if (input$testFileOpt == 'Split') {
+      sample <- GetSplits()
+      data_frame <- GetDataFrame()
+      test <- data_frame[sample == FALSE,]
+    }
+    
+    predictions <- predict(dt_mod, test, type = "class")
+    
+    predictions
+  })
+  
+  output$plotDT <- renderPlot({
+    dt_mod <- createDTModel()
+    rpart.plot(dt_mod)
+  })
+  
+  GetActualOutcomesDT <- reactive({
+    if (input$testFileOpt == 'Upload') {
+      test <- GetTestDataFrame()
+    }
+    else if (input$testFileOpt == 'Split') {
+      sample <- GetSplits()
+      data_frame <- GetDataFrame()
+      test <- data_frame[sample == FALSE,]
+    }
+    
+    test[, input$dtpr]
+  })
+  
+  
+  output$predictionsDT <- renderTable({
+    actual <- GetActualOutcomesDT()
+    predictions <- GetDTPredictions()
+    table(as.factor(actual), as.factor(predictions), dnn = c('Actual', 'Predicted'))
+  })
+  
+})

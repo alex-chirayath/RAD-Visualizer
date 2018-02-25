@@ -1,0 +1,7 @@
+speed,dist,brand
+4,2,mazda
+4,10,ferrari
+7,14,toyota
+7,22,nissan
+8,16,mitsubushi
+9,10,honda
