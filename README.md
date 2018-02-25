@@ -1,4 +1,4 @@
-# Shiny_DataScience
+# RADVisualizer
 
 As the human race stepped into the infromation age, Data explosion has been one of the biggest things that occured in the past few decades. It came as no surprise that the Data Scientist role has been considered the sexiest job of the 21st century. The number of roles in the field have reached all time highs. Yet, there is still a dire need for good data scientists in the community. At this moment, one has to ask *Why hasn't such abundance of data and the massive interest in data science projects among the community sufficed to solve the need for data scientists?* We believe the answer is simple. Most of the data science roles in the industry require a strong background in statistics coupled with a strong background in programming using Python, R, Java etc. This implies that a majority of people might be unable to match the required skillset! Consider the statisticians who do not have a background in coding or Business Intelligence majors who could identify some key patterns which could go unnoticed from the usual CS/ECE developers for instance.
 
@@ -17,22 +17,20 @@ Developing a customer-centric and customer-driven product was the main goal of t
 5. Its open-source, duh!
 
 
- *We are aware we have a long way to go to create a complete project. But it is the need of the hour to develope and promote open-soruce tools aimed for beginners interested in data science to assist them in effectively using data technologies. Shiny DataScience is here to help the current open-source community and more importantly, ensure it's growth to all corners of the world. 
+ *We are aware we have a long way to go to create a complete project. But it is the need of the hour to develop and promote open-soruce tools aimed for beginners interested in data science to assist them in effectively using data technologies. Shiny DataScience is here to help the current open-source community and more importantly, ensure it's growth to all corners of the world. 
 
-## USAGE
-  * [USAGE EXAMPLE]
-  
 ## BUILD/INSTALLATION INSTRUCTIONS
-  * [PLATFORM 1]
-    * [BUILD EXAMPLE]
-  * [PLATFORM 2]
-    * [BUILD EXAMPLE]
+  The packages can be installed from CRAN:
 
-## [INTERFACES] _(if applicable)_ 
-
-## OTHER SOURCES OF DOCUMENTATION
+* <code>install.packages(shiny)</code>
+* <code>install.packages(ggplot2)</code>
+* <code>install.packages(shinydashboard)</code>
+* <code>install.packages(colourpicker)</code>
+* <code>install.packages(leaflet)</code>
+* <code>install.packages(dplyr)</code>
 
 ## Contributor Guide
-[LINK TO CONTRIBUTING.md]
+<a href="https://github.com/mscsalex/Shiny_DataScience/blob/master/CONTRIBUTING.md">Contributer Guide</a>
 
 ## License 
+Released under the <a href="https://github.com/mscsalex/Shiny_DataScience/blob/master/LICENSE">GPL-3 License</a>.
