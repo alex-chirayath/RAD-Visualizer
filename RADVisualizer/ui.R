@@ -24,7 +24,8 @@ dashboardPage(
       menuItem("Scatter Plot", tabName = "scatterPlot"),
       menuItem("Bar Plot", tabName = "barPlot"),
       menuItem("Box Plot", tabName = "boxPlot"),
-      menuItem("Histograms", tabName = "histograms")
+      menuItem("Histograms", tabName = "histograms"),
+      menuItem("Geospatial Plot", tabName = "geospatialmap")
     )
   ),
   dashboardBody(
@@ -90,6 +91,20 @@ dashboardPage(
                 box(plotOutput("histPlotOutput")),
                 
                 box("Code", verbatimTextOutput("histPlotCode"))
+              )
+      ),
+      
+      tabItem(tabName = "geospatialmap",
+              fluidRow(
+                box("Inputs for Geospatial map",
+                    uiOutput("geoVariableLatInput"),
+                    uiOutput("geoVariableLongInput"),
+                    uiOutput("geoVariableInfoInput"),
+                    actionButton("plotMap", "Plot")),
+                
+                box(leafletOutput("mapPlotOutput")),
+                
+                box("Code", verbatimTextOutput("mapPlotCode"))
               )
       )
     )
