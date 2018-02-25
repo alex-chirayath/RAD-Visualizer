@@ -185,19 +185,13 @@ shinyServer(function(input, output) {
     
     isolate({
       if (input$barstacked == FALSE) {
-        text <- paste0('ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$barPlotVariableX, '],
-                       fill = data_frame[,', input$barPlotVariableColor,'])) + \n
-                       geom_bar(position = "dodge") + \n
-                       labs(title = "Bar plot of ', input$barPlotVariableX, ' with ', input$barPlotVariableColor, '"
+        text <- paste0('ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$barPlotVariableX, '],fill = data_frame[,', input$barPlotVariableColor,'])) + geom_bar(position = "dodge") + \n labs(title = "Bar plot of ', input$barPlotVariableX, ' with ', input$barPlotVariableColor, '"
                        x = ', input$barPlotVariableX, '
                        y = "Count",
                        fill = ', input$barPlotVariableColor, ')')
       }
       else {
-        text <- paste0('ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$barPlotVariableX, '],
-                       fill = data_frame[,', input$barPlotVariableColor,'])) + \n
-                       geom_bar() + \n
-                       labs(title = "Bar plot of ', input$barPlotVariableX, ' with ', input$barPlotVariableColor, '"
+        text <- paste0('ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$barPlotVariableX, '],fill = data_frame[,', input$barPlotVariableColor,'])) + s geom_bar() + \n labs(title = "Bar plot of ', input$barPlotVariableX, ' with ', input$barPlotVariableColor, '"
                        x = ', input$barPlotVariableX, '
                        y = "Count",
                        fill = ', input$barPlotVariableColor, ')')
@@ -246,10 +240,7 @@ shinyServer(function(input, output) {
     
     isolate({
       paste0(
-        'ggplot(data = data_frame, mapping = aes(x = data_frame[, ' ,input$boxPlotVariableX,'], 
-                                                y = data_frame[, ',input$boxPlotVariableY, '],
-                                                fill = data_frame[, ', input$boxPlotVariableX, '])) + 
-          geom_boxplot() +
+        'ggplot(data = data_frame, mapping = aes(x = data_frame[, ' ,input$boxPlotVariableX,'], y = data_frame[, ',input$boxPlotVariableY, '],fill = data_frame[, ', input$boxPlotVariableX, '])) + geom_boxplot() +
           labs(title = "Bar plot of ', input$boxPlotVariableX, ' with ', input$boxPlotVariableY, '",
                x = ', input$boxPlotVariableX, ',
                y = ', input$boxPlotVariableY, ',
@@ -286,9 +277,7 @@ shinyServer(function(input, output) {
       data_frame <- GetDataFrame()
       
       paste0(
-        'ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$histPlotVariableX, '])) +\n
-        geom_histogram() +\n
-        labs(title = "Histogram of ', input$histPlotVariableX, '", 
+        'ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$histPlotVariableX, '])) +geom_histogram() +\n labs(title = "Histogram of ', input$histPlotVariableX, '", 
              x = ', input$histPlotVariableX, '
              y = "Count")')
     })
