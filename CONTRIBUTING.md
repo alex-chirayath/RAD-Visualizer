@@ -20,7 +20,7 @@ To submit a contribution:
 <ol>
  <li><a href="github.com/mscsalex/Shiny_DataScience/fork">Fork</a> the repository.</li>
  <li>Clone the original repository to your local PC</a></li>
- <li>Add your fork with <code>git@github.com:usernameShiny_DataScience.git</code></li>
+ <li>Add your fork with <code>git@github.com:username/Shiny_DataScience.git</code></li>
  <li>If you already have a fork and copy of the repo, you can simply check to make sure you're up-to-date
  <ul>Pull the upstream:<code>git pull upstream --rebase</code></ul>
  <ul>Update the submodules:<code>git submodule update --recursive --init</code></ul>
