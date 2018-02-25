@@ -200,9 +200,9 @@ shinyServer(function(input, output) {
                        y = "Count",
                        fill = ', input$barPlotVariableColor, ')')
       }
-    })
+      })
     
-  })
+      })
   
   output$boxPlotVariableXInput <- renderUI({
     categorical_vars <- GetCategoricalVariables()
@@ -245,13 +245,13 @@ shinyServer(function(input, output) {
     isolate({
       paste0(
         'ggplot(data = data_frame, mapping = aes(x = data_frame[, ' ,input$boxPlotVariableX,'], y = data_frame[, ',input$boxPlotVariableY, '],fill = data_frame[, ', input$boxPlotVariableX, '])) + geom_boxplot() +
-          labs(title = "Bar plot of ', input$boxPlotVariableX, ' with ', input$boxPlotVariableY, '",
-               x = ', input$boxPlotVariableX, ',
-               y = ', input$boxPlotVariableY, ',
-               fill = ', input$boxPlotVariableX, ')'
+        labs(title = "Bar plot of ', input$boxPlotVariableX, ' with ', input$boxPlotVariableY, '",
+        x = ', input$boxPlotVariableX, ',
+        y = ', input$boxPlotVariableY, ',
+        fill = ', input$boxPlotVariableX, ')'
       )
     })
-  })
+    })
   
   output$histVariableXInput <- renderUI({
     numeric_vars <- GetNumericVariables()
@@ -282,12 +282,12 @@ shinyServer(function(input, output) {
       
       paste0(
         'ggplot(data = data_frame, mapping = aes(x = data_frame[,', input$histPlotVariableX, '])) +geom_histogram() +\n labs(title = "Histogram of ', input$histPlotVariableX, '", 
-             x = ', input$histPlotVariableX, '
-             y = "Count")')
+        x = ', input$histPlotVariableX, '
+        y = "Count")')
     })
-  })
+    })
   
-})
+    })
 library(shiny)
 library(ggplot2)
 library(leaflet)
@@ -766,17 +766,27 @@ shinyServer(function(input, output) {
   })
   
   output$mseLR <- renderText({
-    actual <- GetActualOutcomesLR()
-    predictions <- GetLRPredictions()
+    if (input$runLR == 0)
+      return()
     
-    paste("Mean Squared Error: ", mean(abs((predictions - actual))/actual))
+    isolate({
+      actual <- GetActualOutcomesLR()
+      predictions <- GetLRPredictions()
+      
+      paste("Mean Squared Error: ", mean(abs((predictions - actual))/actual))
+    })
   })
   
   output$predictionsLR <- renderTable({
-    actual <- GetActualOutcomesLR()
-    predictions <- GetLRPredictions()
+    if (input$runLR == 0)
+      return()
     
-    cbind(actual, predictions)
+    isolate({
+      actual <- GetActualOutcomesLR()
+      predictions <- GetLRPredictions()
+      
+      cbind(actual, predictions)
+    })
   })
   
   output$dtVariables <- renderUI({
@@ -819,25 +829,35 @@ shinyServer(function(input, output) {
   })
   
   GetDTPredictions <- reactive({
-    dt_mod <- createDTModel()
+    if (input$runDT == 0)
+      return()
     
-    if (input$testFileOpt == 'Upload') {
-      test <- GetTestDataFrame()
-    }
-    else if (input$testFileOpt == 'Split') {
-      sample <- GetSplits()
-      data_frame <- GetDataFrame()
-      test <- data_frame[sample == FALSE,]
-    }
-    
-    predictions <- predict(dt_mod, test, type = "class")
-    
-    predictions
+    isolate({
+      dt_mod <- createDTModel()
+      
+      if (input$testFileOpt == 'Upload') {
+        test <- GetTestDataFrame()
+      }
+      else if (input$testFileOpt == 'Split') {
+        sample <- GetSplits()
+        data_frame <- GetDataFrame()
+        test <- data_frame[sample == FALSE,]
+      }
+      
+      predictions <- predict(dt_mod, test, type = "class")
+      
+      predictions
+    })
   })
   
   output$plotDT <- renderPlot({
-    dt_mod <- createDTModel()
-    rpart.plot(dt_mod)
+    if (input$runDT == 0)
+      return()
+    
+    isolate({
+      dt_mod <- createDTModel()
+      rpart.plot(dt_mod)
+    })
   })
   
   GetActualOutcomesDT <- reactive({
@@ -855,9 +875,49 @@ shinyServer(function(input, output) {
   
   
   output$predictionsDT <- renderTable({
-    actual <- GetActualOutcomesDT()
-    predictions <- GetDTPredictions()
-    table(as.factor(actual), as.factor(predictions), dnn = c('Actual', 'Predicted'))
+    if (input$runDT == 0)
+      return()
+    
+    isolate({
+      actual <- GetActualOutcomesDT()
+      predictions <- GetDTPredictions()
+      table(as.factor(actual), as.factor(predictions), dnn = c('Actual', 'Predicted'))
+    })
   })
   
-})
+  output$lrCode <- renderText({
+    
+    if (input$runLR == 0)
+      return()
+    
+    isolate({
+      selected_lrx <- input$lrx
+      selected_pr <- input$lrpr
+      data_frame <- GetDataFrame()
+      
+      shiny::validate(need(length(selected_lrx)>= 1, "Variable selection required"))
+      formula <- paste(selected_pr, "~", paste(selected_lrx, collapse = "+"))
+      
+      paste0('linear_mod <- lm(', formula, ', data = data_frame) \n predictions <- predict(linear_mod, test) \n predictions')
+    })
+  })
+  
+  output$dtCode <- renderText({
+    
+    if (input$runDT == 0)
+      return()
+    
+    isolate({
+      selected_dtx <- input$dtx
+      selected_pr <- input$dtpr
+      data_frame <- GetDataFrame()
+      
+      shiny::validate(need(length(selected_dtx) >= 1, "Variable selection required"))
+      formula <- paste(selected_pr, "~", paste(selected_dtx, collapse = "+"))
+      
+      paste0('dt_mod <- rpart(', formula, ', data = train, method = "class") \n predictions <- predict(dt_mod, test, type = "class") \n predictions')
+    })
+  })
+  
+  
+        })

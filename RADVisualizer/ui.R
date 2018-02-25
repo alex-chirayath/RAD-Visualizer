@@ -4,7 +4,7 @@ library(colourpicker)
 library(leaflet)
 
 dashboardPage(
-  dashboardHeader(),
+  dashboardHeader(title='RAD Visualizer'),
   dashboardSidebar(
     sidebarMenu(
       radioButtons("delimFile", "Select file format:",
@@ -23,35 +23,35 @@ dashboardPage(
       ),
       menuItem("Summary", tabName = "summary"),
       menuItem("Data Visualization",
-        menuSubItem("Scatter Plot", tabName = "scatterPlot"),
-        menuSubItem("Bar Plot", tabName = "barPlot"),
-        menuSubItem("Box Plot", tabName = "boxPlot"),
-        menuSubItem("Histograms", tabName = "histograms"),
-        menuSubItem("Geospatial Plot", tabName = "geospatialmap")
+               menuSubItem("Scatter Plot", tabName = "scatterPlot"),
+               menuSubItem("Bar Plot", tabName = "barPlot"),
+               menuSubItem("Box Plot", tabName = "boxPlot"),
+               menuSubItem("Histograms", tabName = "histograms"),
+               menuSubItem("Geospatial Plot", tabName = "geospatialmap")
       ),
       menuItem("Machine Learning",
-        radioButtons("testFileOpt", "Upload or split train set:", choices = c("Upload", "Split"),
-                     inline = TRUE),
-        conditionalPanel(condition = "input.testFileOpt == 'Upload'",
-                         radioButtons("delimTestFile", "Select file format:",
-                                      choices = c("csv", "tsv"), inline = TRUE),
-                         fileInput("testFile",
-                                   "Upload test file ",
-                                   accept = c(
-                                     "text/tsv",
-                                     "text/tab-separated-values,text/plain",
-                                     ".txt",
-                                     ".tsv",
-                                     "text/comma-separated-values,text/plain",
-                                     ".csv"
-                                   ))
-        ),
-        conditionalPanel(condition = "input.testFileOpt == 'Split'",
-                         numericInput("trainRatio", "Enter train size (0 - 1)",
-                                      min = 0, max = 1.0, step = 0.05, value = 0.7)
-        ),
-        menuSubItem("Linear Regression", tabName = "linearRegression"),
-        menuSubItem("Decision Tree", tabName = "decisionTree")
+               radioButtons("testFileOpt", "Upload or split train set:", choices = c("Upload", "Split"),
+                            inline = TRUE),
+               conditionalPanel(condition = "input.testFileOpt == 'Upload'",
+                                radioButtons("delimTestFile", "Select file format:",
+                                             choices = c("csv", "tsv"), inline = TRUE),
+                                fileInput("testFile",
+                                          "Upload test file ",
+                                          accept = c(
+                                            "text/tsv",
+                                            "text/tab-separated-values,text/plain",
+                                            ".txt",
+                                            ".tsv",
+                                            "text/comma-separated-values,text/plain",
+                                            ".csv"
+                                          ))
+               ),
+               conditionalPanel(condition = "input.testFileOpt == 'Split'",
+                                numericInput("trainRatio", "Enter train size (0 - 1)",
+                                             min = 0, max = 1.0, step = 0.05, value = 0.7)
+               ),
+               menuSubItem("Linear Regression", tabName = "linearRegression"),
+               menuSubItem("Decision Tree", tabName = "decisionTree")
       )
     )
   ),
@@ -138,20 +138,21 @@ dashboardPage(
       tabItem(tabName = "linearRegression",
               fluidRow(
                 box("LR setup",
-                  uiOutput("lrVariables"),
-                  uiOutput("lrPredictor"),
-                  actionButton("runLR", "Run")
+                    uiOutput("lrVariables"),
+                    uiOutput("lrPredictor"),
+                    actionButton("runLR", "Run")
                 ),
                 
                 box("Predictions",
                     wellPanel(
                       tableOutput("predictionsLR"),
                       style = "overflow-y:scroll; max-height: 200px;
-                       overflow-x:scroll; auto"
+                      overflow-x:scroll; auto"
                     ),
-                    textOutput("mseLR"))
-              )
-      ),
+                    textOutput("mseLR")),
+                box("Code", verbatimTextOutput("lrCode"))
+                )
+              ),
       
       tabItem(tabName = "decisionTree",
               fluidRow(
@@ -167,12 +168,14 @@ dashboardPage(
                       style = "overflow-y:scroll; max-height: 200px;
                       overflow-x:scroll; auto"
                     )
-                ),
+                    ),
+                
+                box("Code", verbatimTextOutput("dtCode")),
                 
                 box("Plot",
                     plotOutput("plotDT"))
                 )
-        )
+      )
     )
-  )
+    )
 )
