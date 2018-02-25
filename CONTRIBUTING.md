@@ -1,4 +1,4 @@
-# Contibuting to Shiny_DataScience
+# Contibuting to RADVisualizer
 
 ## Welcome contributors to the project: 
 
